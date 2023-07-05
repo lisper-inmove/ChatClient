@@ -1,0 +1,69 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+  --appbar-bg-color: #474747;
+  --sidebar-bg-color: #353535;
+  --sidebar-transparent-bg-color: #595959;
+
+  --content-bg-color: #555;
+  --content-bg-color-rgb: rgb(5, 5, 5, 0.01);
+
+  --copy-btn-color: #abc;
+  --even-message-bg-color: #333;
+  --odd-message-bg-color: #3f332a;
+
+  --markdown-body-bg-color: #666;
+  --markdown-body-pre-bg-color: rgba(27, 31, 35, 0.45);
+  --markdown-font-color: #cecece;
+  
+  --textfield-bg-color: #434343;
+  --send-icon-bg-color: #00b3ff;
+  --sending-icon-bg-color: gray;
+  --text-area-ctrl-font-color: #9c9999;
+
+  --userinfo-border-color: #5b5050;
+  --userinfo-menu-item-bg-color: #bdbdbd;
+  --login-dialog-bg-color: #474747;
+  --login-dialog-font-color: #ffffff;
+
+  --common-font-color: #9c9999;
+  --common-border-color: #5b5050;
+  --common-button-bg-color: #525252db;
+
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
+}
+
+.Container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+::-webkit-scrollbar {
+  width: 0;
+}
+
+.markdown-body {
+  width: 100%;
+  background-color: var(--markdown-body-bg-color);
+}
+
+.text-white {
+  color: var(--copy-btn-color);
+}
+
+.highlightCode {
+  background-color: var(--markdown-body-pre-bg-color);
+}

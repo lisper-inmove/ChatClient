@@ -1,0 +1,78 @@
+/* Message.module.css */
+
+.message {
+  display: flex;
+  align-items: center;
+  margin: 1em 0;
+  background-color: var(--markdown-body-bg-color);
+}
+
+.messageContainer {
+  display: flex;
+  margin: 1.5em 0;
+  background-color: var(--markdown-body-bg-color);
+}
+
+.avatarContainer {
+  flex: 0.5;
+  position: relative;
+  background-color: var(--markdown-body-bg-color);
+  border-top-left-radius: 25px;
+}
+
+.avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px; /* 调整为适当的大小 */
+  color: white; /* 文本颜色设置为白色以提高对比度 */
+  position: static;
+}
+
+.messageContent {
+  padding-right: 1px;
+  display: flex;
+  flex: 8;
+}
+
+.reactMarkDown {
+  padding: 10px 20px;
+  background-color: var(--markdown-body-bg-color);
+  color: var(--markdown-font-color);
+}
+
+.reactMarkDown ul {
+  margin-top: 1em;
+  margin-bottom: 1em;
+  list-style: disc outside none;
+}
+
+.reactMarkDown ul li {
+  margin-left: 1.2em;
+  display: list-item;
+  text-align: -webkit-match-parent;
+}
+
+.markdownBody pre{
+    position: relative;
+    margin-bottom: 3em !important;
+    background-color: var(--markdown-body-pre-bg-color);
+    -webkit-box-shadow: -10px 0px 13px -7px #000000, 10px 0px 13px -7px #000000, 35px -23px 2px -16px rgba(0, 0, 0, 0);
+    box-shadow: -10px 0px 13px -7px #000000, 10px 0px 13px -7px #000000, 35px -23px 2px -16px rgba(0, 0, 0, 0);
+}
+
+.displayMessage {
+    borderTopLeftRadius: '30px';
+}
+
+.evenMessage {
+    background-color: var(--even-message-bg-color);
+}
+
+.oddMessage {
+    background-color: var(--odd-message-bg-color);
+}
+

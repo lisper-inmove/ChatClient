@@ -1,0 +1,7 @@
+/* Sidebar.module.css */
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  height: 100vh; /* This makes sure the sidebar takes up the full height of the viewport */
+}

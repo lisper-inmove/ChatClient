@@ -1,0 +1,35 @@
+.userinfoContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0.5; /* This will take up 1 part of the available space */
+  height: 20vh;
+}
+
+.userinfoBorder {
+  width: 95%;
+  padding-top: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid var(--common-border-color);
+}
+
+.userinfo {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  color: var(--common-font-color);
+}
+
+.userinfoUsername {
+  margin-left: 10px;
+}
+
+.userinfoMenu {
+
+}
+
+.menuItem {
+  background-color: var(--userinfo-menu-item-bg-color);
+}

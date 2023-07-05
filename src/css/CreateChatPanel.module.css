@@ -1,0 +1,71 @@
+.chatContainer {
+  display: flex;
+  flex: 8.5;
+  flex-direction: column;
+  height: 80vh;
+}
+
+.createChatBorder {
+  width: 95%;
+  flex: 1;
+  display: flex;
+  justify-content: space-around;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--common-border-color);
+}
+
+.createChat {
+  margin-top: 10px;
+  flex: 0.5; /* This will take up 1 part of the available space */
+  display: flex;
+  justify-content: center;
+}
+
+.createButton:hover {
+  background-color: var(--common-button-bg-color);
+}
+
+.chatList {
+  flex: 7;
+  overflow-y: scroll;
+}
+
+.chatListItem {
+  padding: 4px;
+  margin: 4px 3px 0;
+  background-color: var(--sidebar-bg-color);
+  transition: background-color 0.3s ease;
+  display: flex;
+  gap: 3px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.chatItem {
+  display: flex;
+  gap: 5px;
+}
+
+.chatListItem:hover {
+  background-color: var(--sidebar-transparent-bg-color);
+}
+
+.chatName {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 150px;  /* Or whatever maximum width you want */
+  color: var(--common-font-color);
+}
+
+.itemOperations {
+  display: flex;
+}
+
+.itemEditTextField {
+  
+}
+
+.itemEditTextFieldRoot {
+  border-color: #000000; /* Set your desired border color */
+}

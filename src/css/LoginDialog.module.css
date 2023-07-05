@@ -1,0 +1,7 @@
+.dialogContent {
+  background-color: var(--login-dialog-bg-color);
+}
+
+.textField {
+  color: var(--login-dialog-font-color);
+}
