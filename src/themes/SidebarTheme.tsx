@@ -1,5 +1,5 @@
 import { createTheme } from '@mui/material/styles';
-import { WebsiteTheme } from './WebsiteTheme';
+import { WebsiteTheme, ColorConstants } from './WebsiteTheme';
 import { outlinedInputClasses } from '@mui/material/OutlinedInput';
 
 
@@ -18,10 +18,10 @@ export const CreateContainerTheme = createTheme({
       styleOverrides: {
         root: {
           '&:hover': {
-            backgroundColor: WebsiteTheme.colorVariables.buttonHoverColor
+            backgroundColor: ColorConstants.buttonHoverColor
           },
           height: '30px',
-          color: WebsiteTheme.colorVariables.buttonTextColor,
+          color: ColorConstants.buttonTextColor,
         }
       }
     }

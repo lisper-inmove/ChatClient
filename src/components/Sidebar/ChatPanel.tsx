@@ -11,7 +11,8 @@ import ShareIcon from '../../icons/ShareIcon';
 import DeleteIcon from '../../icons/DeleteIcon';
 
 import { ThemeProvider } from '@mui/material/styles';
-import { ChatListTheme, CreateContainerTheme } from '../../Themes';
+import { ChatListTheme, CreateContainerTheme } from '../../themes/ChitchatTheme';
+import { ColorConstants } from '../../themes/WebsiteTheme';
 import { styled } from '@mui/system';
 
 
@@ -46,14 +47,14 @@ const ChatList = styled(Box)(({ theme }) => ({
 const ChatListItem = styled(Box)(({ theme }) => ({
   padding: '4px',
   margin: '4px 3px 0',
-  backgroundColor: theme.customVariables.sidebarBgColor,
+  backgroundColor: ColorConstants.sidebarBgColor,
   transaction: 'background-color 0.3s ease',
   display: 'flex',
   gap: '3px',
   alignItems: 'center',
   justifyContent: 'space-between',
   '&:hover': {
-    backgroundColor: theme.customVariables.chatListItemHoverColor,
+    backgroundColor: ColorConstants.chatListItemHoverColor,
   }
 }));
 
@@ -67,7 +68,7 @@ const ChatName = styled('p')(({ theme }) => ({
   overflow: 'hidden',
   textOverflow: 'ellipsis',
   maxWidth: '150px',
-  color: theme.customVariables.commonTextColor,
+  color: ColorConstants.commonFontColor,
 }));
 
 const ItemOperations = styled('p')(({ theme }) => ({
@@ -89,8 +90,8 @@ interface ChatCategory {
 
 const ChatPanel = () => {
   const [chatList, setChatList] = useState<ChatCategory[]>([]);
-  const [hoveredItemId, setHoveredItemId] = React.useState(null);
-  const [editItemId, setEditItemId] = React.useState(null);
+  const [hoveredItemId, setHoveredItemId] = React.useState(-1);
+  const [editItemId, setEditItemId] = React.useState(-1);
   const [editedChatName, setEditedChatName] = React.useState('');
 
   // TODO: for test. 应该由服务端生成ID
@@ -107,23 +108,22 @@ const ChatPanel = () => {
     setChatList((prevChatList) => [newChatCategory, ...prevChatList]);
   };
 
-  const handleUpdateChatName = () => {}
-  const handleShareChat = () => {}
-  const handleDeleteChat = () => {}
+  const handleShareChat = (id: number) => {}
+  const handleDeleteChat = (id: number) => {}
 
-  const handleStartEditing = (id, name) => {
+  const handleStartEditing = (id: number, name: string) => {
     setEditItemId(id);
     setEditedChatName(name);
     console.log(id, name);
   };
   
   const handleCancelEditing = () => {
-    setEditItemId(null);
+    setEditItemId(-1);
     setEditedChatName('');
   };
   
-  const handleApplyChanges = (chat) => {
-    setEditItemId(null);
+  const handleApplyChanges = (chat: ChatCategory) => {
+    setEditItemId(-1);
     setEditedChatName('');
     chat.name = editedChatName;
   };
@@ -155,7 +155,7 @@ const ChatPanel = () => {
             <ChatListItem
               key={chat.id}
               onMouseEnter={() => setHoveredItemId(chat.id)}
-              onMouseLeave={() => setHoveredItemId(null)}
+              onMouseLeave={() => setHoveredItemId(-1)}
             >
               <ChatItem>
                 {chat.type === ChatType.ROLE ? <RoleIcon /> : <ChatIcon />}

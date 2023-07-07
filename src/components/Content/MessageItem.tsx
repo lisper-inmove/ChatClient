@@ -20,7 +20,7 @@ const MessageItem: React.FC<MessageProps> = ({ sender, content, index }) => {
 
   const avatarColor = randomColor(sender);
   const avatarLetter = sender.charAt(0);
-
+  
   const shareStyle = {
     borderTopLeftRadius: '30px',
   };

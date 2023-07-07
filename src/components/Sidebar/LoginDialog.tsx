@@ -8,8 +8,7 @@ import DialogActions from '@mui/material/DialogActions';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
-import WebSocketService from '../../utils/websocket';
-import { MessageData } from '../../utils/websocket';
+import WebSocketService from '../../websocket/Websocket';
 import styles from '../../css/LoginDialog.module.css';
 import { Md5 } from 'ts-md5';
 
@@ -27,20 +26,18 @@ const LoginDialog: React.FC<LoginDialogProps> = ({ open, onClose, setUserinfo })
   const [loginUsernameError, setLoginUsernameError] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
   const [loginPasswordError, setLoginPasswordError] = useState("");
-
   const [signUpUsername, setSignUpUsername] = useState("");
   const [signUpUsernameError, setSignUpUsernameError] = useState("");
   const [signUpPassword, setSignUpPassword] = useState("");
   const [signUpPasswordError, setSignUpPasswordError] = useState("");
   const [signUpConfirmPassword, setSignUpConfirmPassword] = useState("");
   const [signUpConfirmPasswordError, setSignUpConfirmPasswordError] = useState("");
-
   const [ws, setWs] = useState<WebSocketService | null>(null);
 
   useEffect(() => {
     const websocket = WebSocketService.getInstance();
-    websocket.register("login", callback);
-    websocket.register("sign_up", callback);
+    websocket.register(websocket.LOGIN_ACTION, callback);
+    websocket.register(websocket.SIGN_UP_ACTION, callback);
     setWs(websocket);
   }, []);
 
@@ -105,49 +102,46 @@ const LoginDialog: React.FC<LoginDialogProps> = ({ open, onClose, setUserinfo })
     setSignUpConfirmPassword(event.target.value);
   };
 
+  const callback = (message: any) => {
+    localStorage.setItem('userinfo', JSON.stringify(message));
+    setUserinfo(message.username, '');
+    onClose();
+  }
+
   const handleLogin = () => {
     if (!checkLoginParams()) {
       return false;
     }
-    const message: MessageData = {
-      sender: 'client',
-      content: JSON.stringify({
+    if (!ws) {
+      return false;
+    }
+    ws.login(
+      {
         'username': loginUsername,
         'password': Md5.hashStr(loginPassword)
-      }),
-      action: 'login'
-    };
-    ws.sendMessage(message);
+      }
+    )
     setLoginUsername('');
     setLoginPassword('');
   };
-
-  const callback = (message: MessageData) => {
-    const m = JSON.parse(message.content);
-    localStorage.setItem('userinfo', message.content);
-    setUserinfo(m.username, '');
-    onClose();
-  }
 
   const handleSignUp = () => {
     if (!checkSignUpParams()) {
       return false;
     }
-    const message: MessageData = {
-      sender: 'client',
-      content: JSON.stringify({
-        'username': signUpUsername,
-        'password': Md5.hashStr(signUpPassword)
-      }),
-      action: 'sign_up'
-    };
-    ws.sendMessage(message);
+    if (!ws) {
+      return false;
+    }
+    ws.signUp({
+      'username': signUpUsername,
+      'password': Md5.hashStr(signUpPassword)
+    });
     setSignUpUsername('');
     setSignUpPassword('');
     setSignUpConfirmPassword('');
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (event: React.KeyboardEvent<HTMLInputElement>) => {
     event.preventDefault();
     if (event.key === "Enter") {
       if (value === 0) {
@@ -245,4 +239,3 @@ const LoginDialog: React.FC<LoginDialogProps> = ({ open, onClose, setUserinfo })
 }
 
 export default LoginDialog;
-

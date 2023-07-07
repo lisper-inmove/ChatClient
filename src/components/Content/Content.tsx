@@ -8,10 +8,16 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { Send as SendIcon } from '@mui/icons-material';
 import { styled } from '@mui/system';
-import Message from './Message';
-import WebSocketService from '../../utils/websocket';
-import { MessageData } from '../../utils/websocket';
+import MessageItem from './MessageItem';
+import WebSocketService from '../../websocket/Websocket';
+import { Request, Response } from '../../websocket/Protocol';
 import styles from '../../css/Content.module.css';
+import { api } from '../../api/api';
+
+interface ChatMessage {
+  content: string,
+  role: string,
+}
 
 
 const Content: React.FC = () => {
@@ -24,14 +30,14 @@ const Content: React.FC = () => {
   // 接收消息已经超时了
   const [receiveTimeout, setReceiveTimeout] = useState(false);
   const [ws, setWs] = useState<WebSocketService | null>(null);
-  const [messages, setMessages] = useState<Array<MessageData>>([]);
+  const [messages, setMessages] = useState<Array<ChatMessage>>([]);
   const [userScrolledUp, setUserScrolledUp] = useState(false);
   const [lastScrollTop, setLastScrollTop] = useState(0);
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const websocket = WebSocketService.getInstance();
-    websocket.register("chat", messageHandler);
+    websocket.register(websocket.CREATE_MESSAGE_ACTION, messageHandler);
     setWs(websocket);
   }, []);
 
@@ -41,53 +47,46 @@ const Content: React.FC = () => {
     }
   }, [messages, userScrolledUp]);
 
-  const messageHandler = (message: MessageData) => {
-    console.log(message);
+  const messageHandler = (resp: api.chitchat.CreateMessageResponse) => {
     setMessages((prevMessages) => {
       let newMessages = [...prevMessages];
-      if (message.is_start) {
+      let message = resp.content;
+      if (resp.isStart) {
         newMessages.push({
-          sender: 'inmove',
-          content: message.content,
-          action: 'chat'
+          content: message,
+          role: 'Server'
         });
         setReceiving(true);
-      } else if (message.is_continue) {
+      } else if (resp.isContinue) {
         if (newMessages.length > 0) {
-          newMessages[newMessages.length - 1].content += message.content;
+          newMessages[newMessages.length - 1].content += message;
         }
-      } else if (message.is_finished) {
+      } else if (resp.isFinished) {
         setSending(false);
         setReceiving(false);
       }
+      console.log(newMessages);
       return newMessages;
     })
   }
 
   const onSend = () => {
     if (!ws) {
-      const m: MessageData = {
-        sender: 'server',
-        content: JSON.stringify({'message': 'Server Not Available'}),
-        action: 'connect'
-      };
       return;
     }
     if (message === '') {
       return;
     }
-    const m: MessageData = {
-      sender: 'inmove',
-      content: JSON.stringify({'message': message}),
-      action: 'chat'
-    };
     setMessages((prevMessages) => [...prevMessages, {
-      sender: 'inmove',
+      role: 'inmove',
       content: message,
-      action: 'chat'
     }]);
 
-    let result = ws.sendMessage(m);
+    ws.createMessage({
+      role: 'user',
+      content: message
+    });
+
     setSending(true);
     setMessage('');
   };
@@ -127,9 +126,9 @@ const Content: React.FC = () => {
         onScroll={handleScroll}
       >
         {messages.map((message, index) => (
-          <Message
+          <MessageItem
             key={index}
-            sender={message.sender}
+            sender={message.role}
             content={message.content}
             index={index}
           />

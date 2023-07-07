@@ -5,7 +5,9 @@ import { ThemeProvider } from '@mui/material/styles';
 
 import Sidebar from '../components/Sidebar/Sidebar';
 import Content from '../components/Content/Content';
-import { WebsiteTheme, SidebarTheme, ContentTheme } from '../Themes';
+import { WebsiteTheme, ColorConstants } from '../themes/WebsiteTheme';
+import { SidebarTheme } from '../themes/SidebarTheme';
+import { ContentTheme } from '../themes/ContentTheme';
 import { styled } from '@mui/system';
 
 const Home: React.FC = () => {
@@ -18,13 +20,13 @@ const Home: React.FC = () => {
   const StyledSidebar = styled(Box)(({theme}) => ({
     width: '15%',
     height: '100%',
-    backgroundColor: theme.customVariables.sidebarBgColor,
+    backgroundColor: ColorConstants.sidebarBgColor,
   }));
 
   const StyledContent = styled(Box)(({theme}) => ({
     width: '85%',
     height: '100%',
-    backgroundColor: theme.customVariables.contentBgColor,
+    backgroundColor: ColorConstants.contentBgColor,
   }));
 
   return (

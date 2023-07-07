@@ -24,7 +24,7 @@ const UserinfoPanel = () => {
 
   // 弹出菜单
   const [anchorEl, setAnchorEl] = useState(null);
-  const openMenu = (event) => {
+  const openMenu = (event: any) => {
     setAnchorEl(event.currentTarget);
   };
 
@@ -42,22 +42,11 @@ const UserinfoPanel = () => {
     setOpenRechargeDialog(false);
   };
 
-  const handleCreateButtonClick = (type: ChatType) => {
-    const newChatCategory: ChatCategory = {
-      id: generateId(),
-      name: type === ChatType.ROLE ? 'New Role' : 'New Chat',
-      type: type,
-    };
-    setChatList((prevChatList) => [...prevChatList, newChatCategory]);
-  };
-
   // 个人使用
   const [userinfo, setUserinfo] = useState(() => {
     if (typeof window !== 'undefined') {
-    const storedUserinfo = localStorage.getItem('userinfo') ?
-      JSON.parse(localStorage.getItem('userinfo')) :
-      null;
-    return storedUserinfo;
+      const storedUserinfo = localStorage.getItem('userinfo');
+      return storedUserinfo ? JSON.parse(storedUserinfo) : null;
     }
     return null;
   });
