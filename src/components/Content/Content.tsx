@@ -12,7 +12,7 @@ import MessageItem from './MessageItem';
 import WebSocketService from '../../websocket/Websocket';
 import { Request, Response } from '../../websocket/Protocol';
 import styles from '../../css/Content.module.css';
-import { api } from '../../api/api';
+import { api } from '../../proto/api/api';
 
 interface ChatMessage {
   content: string,

@@ -1,6 +1,6 @@
 import ReconnectingWebSocket from 'reconnecting-websocket';
 import { Request, Response, Message } from './Protocol';
-import { api } from '../api/api';
+import { api } from '../proto/api/api';
 
 class WebSocketService {
 
