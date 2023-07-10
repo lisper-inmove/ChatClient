@@ -19,7 +19,7 @@ export enum ColorConstants {
     // 通用字体颜色
     commonFontColor = 'white',
     // 侧边栏鼠标hover时的颜色
-    chatListItemHoverColor = '#595959',
+    chitchatListItemHoverColor = '#595959',
     // 聊天列表背景色
     chitchatBgColor = '#555555',
     // 聊天列表hover时背景色

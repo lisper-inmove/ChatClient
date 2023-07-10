@@ -14,7 +14,7 @@ export const ChitchatTextFieldTheme = createTheme({
   }
 });
 
-export const ChatListTheme = createTheme({
+export const ChitchatListTheme = createTheme({
   palette: {
     mode: WebsiteTheme.palette.mode,
   },

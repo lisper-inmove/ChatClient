@@ -1,6 +1,6 @@
 import Box from '@mui/material/Box';
 import styles from '../../css/Sidebar.module.css';
-import ChatPanel from './ChatPanel';
+import ChitchatPanel from './ChitchatPanel';
 import UserinfoPanel from './UserinfoPanel';
 
 const Sidebar: React.FC = () => {
@@ -8,7 +8,7 @@ const Sidebar: React.FC = () => {
   return (
     <Box className={styles.sidebar}>
 
-      <ChatPanel />
+      <ChitchatPanel />
 
       <UserinfoPanel />
 
@@ -18,4 +18,3 @@ const Sidebar: React.FC = () => {
 }
 
 export default Sidebar;
-

@@ -13,27 +13,27 @@ import DeleteIcon from '../../icons/DeleteIcon';
 import { api } from '../../proto/api/api';
 
 import { ThemeProvider } from '@mui/material/styles';
-import { ChatListTheme, CreateContainerTheme } from '../../themes/ChitchatTheme';
+import { ChitchatListTheme, CreateContainerTheme } from '../../themes/ChitchatTheme';
 import { ColorConstants } from '../../themes/WebsiteTheme';
 import { styled } from '@mui/system';
 
 
 // styles ------------------------------------------------------------
-const ChatContainer = styled(Box)(({ theme }) => ({
+const ChitchatContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   flex: '8.5',
   flexDirection: 'column',
   height: '80vh',
 }));
 
-const CreateChat = styled(Box)(({ theme }) => ({
+const CreateChitchat = styled(Box)(({ theme }) => ({
   marginTop: '10px',
   flex: '0.4',
   display: 'flex',
   justifyContent: 'center',
 }));
 
-const CreateChatBorder = styled(Box)(({ theme }) => ({
+const CreateChitchatBorder = styled(Box)(({ theme }) => ({
   width: '95%',
   flex: '1',
   display: 'flex',
@@ -41,12 +41,12 @@ const CreateChatBorder = styled(Box)(({ theme }) => ({
   borderBottom: `1px solid ${theme.palette.divider}`,
 }));
 
-const ChatList = styled(Box)(({ theme }) => ({
+const ChitchatList = styled(Box)(({ theme }) => ({
   flex: '7',
   overflowY: 'scroll'
 }));
 
-const ChatListItem = styled(Box)(({ theme }) => ({
+const ChitchatListItem = styled(Box)(({ theme }) => ({
   padding: '4px',
   margin: '4px 3px 0',
   backgroundColor: ColorConstants.sidebarBgColor,
@@ -56,16 +56,16 @@ const ChatListItem = styled(Box)(({ theme }) => ({
   alignItems: 'center',
   justifyContent: 'space-between',
   '&:hover': {
-    backgroundColor: ColorConstants.chatListItemHoverColor,
+    backgroundColor: ColorConstants.chitchatListItemHoverColor,
   }
 }));
 
-const ChatItem = styled(Box)(({ theme }) => ({
+const ChitchatItem = styled(Box)(({ theme }) => ({
   display: 'flex',
   gap: '5px',
 }));
 
-const ChatName = styled('p')(({ theme }) => ({
+const ChitchatName = styled('p')(({ theme }) => ({
   whiteSpace: 'nowrap',
   overflow: 'hidden',
   textOverflow: 'ellipsis',
@@ -79,7 +79,7 @@ const ItemOperations = styled('p')(({ theme }) => ({
 
 // styles end---------------------------------------------------------
 
-enum ChatType {
+enum ChitchatType {
   ROLE = 'Role',
   CHAT = 'Chat',
 }
@@ -87,87 +87,87 @@ enum ChatType {
 interface Chitchat {
   id: number;
   name: string;
-  type: ChatType;
+  type: ChitchatType;
 }
 
-const ChatPanel = () => {
-  const [chatList, setChatList] = useState<Chitchat[]>([]);
+const ChitchatPanel = () => {
+  const [chitchatList, setChitchatList] = useState<Chitchat[]>([]);
   const [hoveredItemId, setHoveredItemId] = React.useState(-1);
   const [editItemId, setEditItemId] = React.useState(-1);
-  const [editedChatName, setEditedChatName] = React.useState('');
+  const [editedChitchatName, setEditedChitchatName] = React.useState('');
 
   // TODO: for test. 应该由服务端生成ID
   const generateId = () => {
-    return chatList.length > 0 ? Math.max(...chatList.map(c => c.id)) + 1 : 1;
+    return chitchatList.length > 0 ? Math.max(...chitchatList.map(c => c.id)) + 1 : 1;
   };
 
-  const handleCreateButtonClick = (type: ChatType) => {
+  const handleCreateButtonClick = (type: ChitchatType) => {
     const newChitchat: Chitchat = {
       id: generateId(),
-      name: type === ChatType.ROLE ? 'New Role >>>>>>>>>>>>>>>>>>>>>>>>>>>.>>>>>>>>>>>>>>>>>>>>>.' : 'New Chat',
+      name: type === ChitchatType.ROLE ? 'New Role >>>>>>>>>>>>>>>>>>>>>>>>>>>.>>>>>>>>>>>>>>>>>>>>>.' : 'New Chitchat',
       type: type,
     };
-    setChatList((prevChatList) => [newChitchat, ...prevChatList]);
+    setChitchatList((prevChitchatList) => [newChitchat, ...prevChitchatList]);
   };
 
-  const handleShareChat = (id: number) => {}
-  const handleDeleteChat = (id: number) => {}
+  const handleShareChitchat = (id: number) => {}
+  const handleDeleteChitchat = (id: number) => {}
 
   const handleStartEditing = (id: number, name: string) => {
     setEditItemId(id);
-    setEditedChatName(name);
+    setEditedChitchatName(name);
     console.log(id, name);
   };
-  
+
   const handleCancelEditing = () => {
     setEditItemId(-1);
-    setEditedChatName('');
+    setEditedChitchatName('');
   };
-  
-  const handleApplyChanges = (chat: Chitchat) => {
+
+  const handleApplyChanges = (chitchat: Chitchat) => {
     setEditItemId(-1);
-    setEditedChatName('');
-    chat.name = editedChatName;
+    setEditedChitchatName('');
+    chitchat.name = editedChitchatName;
   };
 
   return (
-    <ChatContainer>
+    <ChitchatContainer>
       <ThemeProvider theme={CreateContainerTheme}>
-        <CreateChat>
-          <CreateChatBorder>
+        <CreateChitchat>
+          <CreateChitchatBorder>
             <Button
               variant="contained"
-              onClick={() => handleCreateButtonClick(ChatType.ROLE)}
+              onClick={() => handleCreateButtonClick(ChitchatType.ROLE)}
             >
               新建角色
             </Button>
             <Button
               variant="contained"
-              onClick={() => handleCreateButtonClick(ChatType.CHAT)}
+              onClick={() => handleCreateButtonClick(ChitchatType.CHAT)}
             >
               新建聊天
             </Button>
-          </CreateChatBorder>
-        </CreateChat>
+          </CreateChitchatBorder>
+        </CreateChitchat>
       </ThemeProvider>
 
-      <ThemeProvider theme={ChatListTheme}>
-        <ChatList>
-          {chatList.map((chat) => (
-            <ChatListItem
-              key={chat.id}
-              onMouseEnter={() => setHoveredItemId(chat.id)}
+      <ThemeProvider theme={ChitchatListTheme}>
+        <ChitchatList>
+          {chitchatList.map((chitchat) => (
+            <ChitchatListItem
+              key={chitchat.id}
+              onMouseEnter={() => setHoveredItemId(chitchat.id)}
               onMouseLeave={() => setHoveredItemId(-1)}
             >
-              <ChatItem>
-                {chat.type === ChatType.ROLE ? <RoleIcon /> : <ChatIcon />}
-                  {editItemId === chat.id ? (
+              <ChitchatItem>
+                {chitchat.type === ChitchatType.ROLE ? <RoleIcon /> : <ChatIcon />}
+                  {editItemId === chitchat.id ? (
                   <TextField
-                    value={editedChatName}
-                    onChange={(e) => setEditedChatName(e.target.value)}
+                    value={editedChitchatName}
+                    onChange={(e) => setEditedChitchatName(e.target.value)}
                     onKeyDown={(e) => {
                       if (e.key === 'Enter') {
-                        handleApplyChanges(chat);
+                        handleApplyChanges(chitchat);
                       }
                     }}
                     onBlur={handleCancelEditing}
@@ -175,40 +175,40 @@ const ChatPanel = () => {
                     size="small"
                   />
                   ) : (
-                    <Tooltip title={chat.name}>
-                      <ChatName>
-                        {chat.name}
-                      </ChatName>
+                    <Tooltip title={chitchat.name}>
+                      <ChitchatName>
+                        {chitchat.name}
+                      </ChitchatName>
                     </Tooltip>
                   )}
-              </ChatItem>
+              </ChitchatItem>
 
               <ItemOperations>
-                {hoveredItemId === chat.id && (
+                {hoveredItemId === chitchat.id && (
                 <>
                   <IconButton
-                    onClick={() => handleStartEditing(chat.id, chat.name)}
+                    onClick={() => handleStartEditing(chitchat.id, chitchat.name)}
                     color="primary"
                     aria-label="update"
                     size="small"
                   >
                     <EditIcon />
                   </IconButton>
-                  <IconButton onClick={() => handleShareChat(chat.id)} color="secondary" aria-label="share">
+                  <IconButton onClick={() => handleShareChitchat(chitchat.id)} color="secondary" aria-label="share">
                     <ShareIcon />
                   </IconButton>
-                  <IconButton onClick={() => handleDeleteChat(chat.id)} color="error" aria-label="delete">
+                  <IconButton onClick={() => handleDeleteChitchat(chitchat.id)} color="error" aria-label="delete">
                     <DeleteIcon />
                   </IconButton>
                   </>
                 )}
               </ItemOperations>
-            </ChatListItem>
+            </ChitchatListItem>
           ))}
-        </ChatList>
+        </ChitchatList>
       </ThemeProvider>
-    </ChatContainer>
+    </ChitchatContainer>
   );
 }
 
-export default ChatPanel;
+export default ChitchatPanel;
