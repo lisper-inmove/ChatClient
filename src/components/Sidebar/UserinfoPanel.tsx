@@ -15,6 +15,8 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import styles from '../../css/UserinfoPanel.module.css';
 import RechargeDialog from './RechargeDialog'; // adjust the path if necessary
 import LoginDialog from './LoginDialog'; // adjust the path if necessary
+import Image from 'next/image';
+
 
 const UserinfoPanel = () => {
 
@@ -89,7 +91,10 @@ const UserinfoPanel = () => {
           {hasMounted && (userinfo ? (
             <>
               <Avatar alt={userinfo.username}>
-                {userinfo.avatar ? <img src={userinfo.avatar} /> : userinfo.username.charAt(0)}
+                {userinfo.avatar ?
+                  <Image src={userinfo.avatar} alt={userinfo.username} />
+                  :
+                userinfo.username.charAt(0)}
               </Avatar>
               <Typography variant="h6" className={styles.userinfoUsername}>
                 {userinfo.username}

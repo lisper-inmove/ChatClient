@@ -7,6 +7,7 @@ class WebSocketService {
   public LOGIN_ACTION = 0x01;
   public SIGN_UP_ACTION = 0x02;
   public CREATE_MESSAGE_ACTION = 0x13;
+  public POPUP_ERROR = 0x00;
 
   // private SOCKET_URL = 'wss://chat.inmove.top/ws';
   private SOCKET_URL = 'ws://192.168.3.124:8765';
@@ -28,14 +29,16 @@ class WebSocketService {
       let actionStr = event.data.substring(0, 2);
       let action = actionStr.charCodeAt(0) << 8 | actionStr.charCodeAt(1);
       let content = event.data.substring(2);
-      const messageData: Message = JSON.parse(content);
-      const handler = this.handlers.get(action);
-      if (handler) {
-        handler(messageData);
+      if (action !== this.POPUP_ERROR) {
+        const message: Message = JSON.parse(content);
+        const handler = this.handlers.get(action);
+        if (handler) {
+          handler(message);
+        }
+      } else if (action === this.POPUP_ERROR) {
+        const message: api.common.PopupErrorResponse = JSON.parse(content);
+        alert(message.error);
       }
-      // if (messageData.action === "error") {
-      //   alert(messageData.content);
-      // }
     });
 
     this.socket.addEventListener('close', (event: any) => {

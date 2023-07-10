@@ -10,6 +10,8 @@ import EditIcon from '../../icons/EditIcon';
 import ShareIcon from '../../icons/ShareIcon';
 import DeleteIcon from '../../icons/DeleteIcon';
 
+import { api } from '../../proto/api/api';
+
 import { ThemeProvider } from '@mui/material/styles';
 import { ChatListTheme, CreateContainerTheme } from '../../themes/ChitchatTheme';
 import { ColorConstants } from '../../themes/WebsiteTheme';
@@ -82,14 +84,14 @@ enum ChatType {
   CHAT = 'Chat',
 }
 
-interface ChatCategory {
+interface Chitchat {
   id: number;
   name: string;
   type: ChatType;
 }
 
 const ChatPanel = () => {
-  const [chatList, setChatList] = useState<ChatCategory[]>([]);
+  const [chatList, setChatList] = useState<Chitchat[]>([]);
   const [hoveredItemId, setHoveredItemId] = React.useState(-1);
   const [editItemId, setEditItemId] = React.useState(-1);
   const [editedChatName, setEditedChatName] = React.useState('');
@@ -100,12 +102,12 @@ const ChatPanel = () => {
   };
 
   const handleCreateButtonClick = (type: ChatType) => {
-    const newChatCategory: ChatCategory = {
+    const newChitchat: Chitchat = {
       id: generateId(),
       name: type === ChatType.ROLE ? 'New Role >>>>>>>>>>>>>>>>>>>>>>>>>>>.>>>>>>>>>>>>>>>>>>>>>.' : 'New Chat',
       type: type,
     };
-    setChatList((prevChatList) => [newChatCategory, ...prevChatList]);
+    setChatList((prevChatList) => [newChitchat, ...prevChatList]);
   };
 
   const handleShareChat = (id: number) => {}
@@ -122,7 +124,7 @@ const ChatPanel = () => {
     setEditedChatName('');
   };
   
-  const handleApplyChanges = (chat: ChatCategory) => {
+  const handleApplyChanges = (chat: Chitchat) => {
     setEditItemId(-1);
     setEditedChatName('');
     chat.name = editedChatName;

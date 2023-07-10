@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
@@ -34,12 +34,18 @@ const LoginDialog: React.FC<LoginDialogProps> = ({ open, onClose, setUserinfo })
   const [signUpConfirmPasswordError, setSignUpConfirmPasswordError] = useState("");
   const [ws, setWs] = useState<WebSocketService | null>(null);
 
+  const request_callback = useCallback((message: any) => {
+    localStorage.setItem('userinfo', JSON.stringify(message));
+    setUserinfo(message.username, '');
+    onClose();
+  }, [onClose, setUserinfo]);
+
   useEffect(() => {
     const websocket = WebSocketService.getInstance();
-    websocket.register(websocket.LOGIN_ACTION, callback);
-    websocket.register(websocket.SIGN_UP_ACTION, callback);
+    websocket.register(websocket.LOGIN_ACTION, request_callback);
+    websocket.register(websocket.SIGN_UP_ACTION, request_callback);
     setWs(websocket);
-  }, []);
+  }, [request_callback]);
 
   const checkSignUpParams = () => {
     if (signUpUsername.length < 3) {
@@ -101,12 +107,6 @@ const LoginDialog: React.FC<LoginDialogProps> = ({ open, onClose, setUserinfo })
   const handleSignUpConfirmPasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSignUpConfirmPassword(event.target.value);
   };
-
-  const callback = (message: any) => {
-    localStorage.setItem('userinfo', JSON.stringify(message));
-    setUserinfo(message.username, '');
-    onClose();
-  }
 
   const handleLogin = () => {
     if (!checkLoginParams()) {
