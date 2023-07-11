@@ -27,17 +27,23 @@ class WebSocketService {
 
     // 接收到服务端的消息时
     this.socket.addEventListener('message', (event: any) => {
-      let protocol = JSON.parse(event.data);
-      console.log("receive message", protocol);
-      if (protocol.action !== this.POPUP_ERROR) {
-        const message: Message = JSON.parse(protocol.content);
-        const handler = this.handlers.get(protocol.action);
-        if (handler) {
-          handler(message);
+      // let protocol = JSON.parse(event.data);
+      const reader = new FileReader();
+      reader.onload = () => {
+        const message = new Uint8Array(reader.result as ArrayBuffer);
+        const protocol = api.common.Protocol.decode(message);
+        console.log(protocol, this);
+        if (protocol.action !== this.POPUP_ERROR) {
+          const message: Message = JSON.parse(protocol.content);
+          const handler = this.handlers.get(protocol.action);
+          if (handler) {
+            handler(message);
+          }
+        } else if (protocol.action === this.POPUP_ERROR) {
+          alert(protocol.errmsg);
         }
-      } else if (protocol.action === this.POPUP_ERROR) {
-        alert(protocol.errmsg);
-      }
+      };
+      reader.readAsArrayBuffer(event.data);
     });
 
     this.socket.addEventListener('close', (event: any) => {
