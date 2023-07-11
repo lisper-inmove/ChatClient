@@ -28,6 +28,7 @@ class WebSocketService {
     // 接收到服务端的消息时
     this.socket.addEventListener('message', (event: any) => {
       let protocol = JSON.parse(event.data);
+      console.log("receive message", protocol);
       if (protocol.action !== this.POPUP_ERROR) {
         const message: Message = JSON.parse(protocol.content);
         const handler = this.handlers.get(protocol.action);
@@ -64,31 +65,30 @@ class WebSocketService {
     this.handlers.set(action, handler);
   }
 
+  public send(req: any, action: number) {
+    let message = api.common.Protocol.create({
+      action: action,
+      content: JSON.stringify(req),
+      errmsg: "",
+    });
+    let buffer = api.common.Protocol.encode(message).finish();
+    this.socket.send(buffer);
+  }
+
   public login(req: any) {
-    let request = this.add_pn(JSON.stringify(req), this.LOGIN_ACTION);
-    this.socket.send(request)
+    this.send(req, this.LOGIN_ACTION);
   }
 
   public signUp(req: any) {
-    let request = this.add_pn(JSON.stringify(req), this.SIGN_UP_ACTION);
-    this.socket.send(request)
+    this.send(req, this.SIGN_UP_ACTION);
   }
 
   public createMessage(req: any) {
-    let request = this.add_pn(JSON.stringify(req), this.CREATE_MESSAGE_ACTION);
-    this.socket.send(request)
+    this.send(req, this.CREATE_MESSAGE_ACTION);
   }
 
   public createChitchat(req: any) {
-    let request = this.add_pn(JSON.stringify(req), this.CREATE_CHITCHAT);
-    this.socket.send(request)
-  }
-
-  public add_pn(msg: string, pn: number) {
-    let buffer = Buffer.alloc(2);
-    buffer.writeUInt16BE(pn, 0);
-    let byteStr = buffer.toString('binary');
-    return byteStr + msg;
+    this.send(req, this.CREATE_CHITCHAT);
   }
 
 }

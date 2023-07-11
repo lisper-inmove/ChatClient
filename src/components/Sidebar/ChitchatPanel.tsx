@@ -10,8 +10,6 @@ import EditIcon from '../../icons/EditIcon';
 import ShareIcon from '../../icons/ShareIcon';
 import DeleteIcon from '../../icons/DeleteIcon';
 
-import { api } from '../../proto/api/api';
-
 import { ThemeProvider } from '@mui/material/styles';
 import { ChitchatListTheme, CreateContainerTheme } from '../../themes/ChitchatTheme';
 import { ColorConstants } from '../../themes/WebsiteTheme';
