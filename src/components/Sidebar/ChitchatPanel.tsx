@@ -15,6 +15,7 @@ import { api } from '../../proto/api/api';
 import { ThemeProvider } from '@mui/material/styles';
 import { ChitchatListTheme, CreateContainerTheme } from '../../themes/ChitchatTheme';
 import { ColorConstants } from '../../themes/WebsiteTheme';
+import CreateRoleDialog from './CreateRoleDialog';
 import { styled } from '@mui/system';
 
 
@@ -95,6 +96,7 @@ const ChitchatPanel = () => {
   const [hoveredItemId, setHoveredItemId] = React.useState(-1);
   const [editItemId, setEditItemId] = React.useState(-1);
   const [editedChitchatName, setEditedChitchatName] = React.useState('');
+  const [createRoleDialogOpen, setCreateRoleDialogOpen] = useState(false);
 
   // TODO: for test. 应该由服务端生成ID
   const generateId = () => {
@@ -102,13 +104,25 @@ const ChitchatPanel = () => {
   };
 
   const handleCreateButtonClick = (type: ChitchatType) => {
+    if (type == ChitchatType.CHAT) {
+
+    } else {
+      setCreateRoleDialogOpen(true);
+    }
+  };
+
+  const handleCreateChitchat = (chitchat: Chitchat) => {
     const newChitchat: Chitchat = {
-      id: generateId(),
-      name: type === ChitchatType.ROLE ? 'New Role >>>>>>>>>>>>>>>>>>>>>>>>>>>.>>>>>>>>>>>>>>>>>>>>>.' : 'New Chitchat',
-      type: type,
+      id: chitchat.id,
+      name: chitchat.name,
+      type: chitchat.type,
     };
     setChitchatList((prevChitchatList) => [newChitchat, ...prevChitchatList]);
-  };
+  }
+
+  const createRole = (name: string, description: string) => {
+
+  }
 
   const handleShareChitchat = (id: number) => {}
   const handleDeleteChitchat = (id: number) => {}
@@ -141,6 +155,11 @@ const ChitchatPanel = () => {
             >
               新建角色
             </Button>
+            <CreateRoleDialog
+              onClose={() => setCreateRoleDialogOpen(false)}
+              onConfirm={(name: string, description: string) => createRole(name, description)}
+              open={createRoleDialogOpen}
+            />
             <Button
               variant="contained"
               onClick={() => handleCreateButtonClick(ChitchatType.CHAT)}

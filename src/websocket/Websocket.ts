@@ -4,10 +4,11 @@ import { api } from '../proto/api/api';
 
 class WebSocketService {
 
+  public POPUP_ERROR = 0xFFFF;
   public LOGIN_ACTION = 0x01;
   public SIGN_UP_ACTION = 0x02;
   public CREATE_MESSAGE_ACTION = 0x13;
-  public POPUP_ERROR = 0x00;
+  public CREATE_CHITCHAT = 0x10;
 
   // private SOCKET_URL = 'wss://chat.inmove.top/ws';
   private SOCKET_URL = 'ws://192.168.3.124:8765';
@@ -21,29 +22,27 @@ class WebSocketService {
     this.socket = new ReconnectingWebSocket(this.SOCKET_URL);
 
     this.socket.addEventListener('open', () => {
-
+      console.log("Connect to server");
     });
 
     // 接收到服务端的消息时
     this.socket.addEventListener('message', (event: any) => {
-      let actionStr = event.data.substring(0, 2);
-      let action = actionStr.charCodeAt(0) << 8 | actionStr.charCodeAt(1);
-      let content = event.data.substring(2);
-      if (action !== this.POPUP_ERROR) {
-        const message: Message = JSON.parse(content);
-        const handler = this.handlers.get(action);
+      let protocol = JSON.parse(event.data);
+      if (protocol.action !== this.POPUP_ERROR) {
+        const message: Message = JSON.parse(protocol.content);
+        const handler = this.handlers.get(protocol.action);
         if (handler) {
           handler(message);
         }
-      } else if (action === this.POPUP_ERROR) {
-        const message: api.common.PopupErrorResponse = JSON.parse(content);
-        alert(message.error);
+      } else if (protocol.action === this.POPUP_ERROR) {
+        alert(protocol.errmsg);
       }
     });
 
     this.socket.addEventListener('close', (event: any) => {
-
+      console.log("close", event);
     });
+
   }
 
   public static getInstance(): WebSocketService {
@@ -66,7 +65,6 @@ class WebSocketService {
   }
 
   public login(req: any) {
-    console.log(this.handlers);
     let request = this.add_pn(JSON.stringify(req), this.LOGIN_ACTION);
     this.socket.send(request)
   }
@@ -78,6 +76,11 @@ class WebSocketService {
 
   public createMessage(req: any) {
     let request = this.add_pn(JSON.stringify(req), this.CREATE_MESSAGE_ACTION);
+    this.socket.send(request)
+  }
+
+  public createChitchat(req: any) {
+    let request = this.add_pn(JSON.stringify(req), this.CREATE_CHITCHAT);
     this.socket.send(request)
   }
 

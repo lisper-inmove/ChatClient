@@ -34,7 +34,7 @@ const LoginDialog: React.FC<LoginDialogProps> = ({ open, onClose, setUserinfo })
   const [signUpConfirmPasswordError, setSignUpConfirmPasswordError] = useState("");
   const [ws, setWs] = useState<WebSocketService | null>(null);
 
-  const request_callback = useCallback((message: any) => {
+  const requestCallback = useCallback((message: any) => {
     localStorage.setItem('userinfo', JSON.stringify(message));
     setUserinfo(message.username, '');
     onClose();
@@ -42,10 +42,10 @@ const LoginDialog: React.FC<LoginDialogProps> = ({ open, onClose, setUserinfo })
 
   useEffect(() => {
     const websocket = WebSocketService.getInstance();
-    websocket.register(websocket.LOGIN_ACTION, request_callback);
-    websocket.register(websocket.SIGN_UP_ACTION, request_callback);
+    websocket.register(websocket.LOGIN_ACTION, requestCallback);
+    websocket.register(websocket.SIGN_UP_ACTION, requestCallback);
     setWs(websocket);
-  }, [request_callback]);
+  }, [requestCallback]);
 
   const checkSignUpParams = () => {
     if (signUpUsername.length < 3) {
