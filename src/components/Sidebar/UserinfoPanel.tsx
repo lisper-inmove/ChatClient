@@ -16,6 +16,8 @@ import styles from '../../css/UserinfoPanel.module.css';
 import RechargeDialog from './RechargeDialog'; // adjust the path if necessary
 import LoginDialog from './LoginDialog'; // adjust the path if necessary
 import Image from 'next/image';
+import WebSocketService from '../../websocket/Websocket';
+import { api } from '../../proto/api/api';
 
 
 const UserinfoPanel = () => {
@@ -23,6 +25,7 @@ const UserinfoPanel = () => {
   // 用户登陆注册面板
   const [loginDialogOpen, setLoginDialogOpen] = useState(false);
   const [hasMounted, setHasMounted] = useState(false);
+  const [ws, setWs] = useState<WebSocketService | null>(null);
 
   // 弹出菜单
   const [anchorEl, setAnchorEl] = useState(null);
@@ -56,12 +59,22 @@ const UserinfoPanel = () => {
   useEffect(() => {
     if (userinfo === null) {
       setLoginDialogOpen(true);
+    } else {
+      if (ws) {
+        ws.tokenAuthorize({"token": userinfo.token});
+      }
     }
-  }, [userinfo]);
+  }, [userinfo, ws]);
 
   useEffect(() => {
     setHasMounted(true);
   }, []);
+
+  useEffect(() => {
+    const websocket = WebSocketService.getInstance();
+    websocket.register(api.common.ProtocolNumber.TOKEN_AUTHORIZE, (message: any) => {});
+    setWs(websocket);
+  }, [ws]);
 
   const handleLoginDialogClose = () => {
     if (userinfo !== null) {

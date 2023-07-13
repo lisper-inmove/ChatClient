@@ -92,6 +92,10 @@ class WebSocketService {
     this.send(req, api.common.ProtocolNumber.CREATE_CHITCHAT);
   }
 
+  public tokenAuthorize(req: any) {
+    this.send(req, api.common.ProtocolNumber.TOKEN_AUTHORIZE);
+  }
+
 }
 
 export default WebSocketService;
