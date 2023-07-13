@@ -10,6 +10,7 @@ import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import WebSocketService from '../../websocket/Websocket';
 import styles from '../../css/LoginDialog.module.css';
+import { api } from '../../proto/api/api';
 import { Md5 } from 'ts-md5';
 
 
@@ -42,8 +43,8 @@ const LoginDialog: React.FC<LoginDialogProps> = ({ open, onClose, setUserinfo })
 
   useEffect(() => {
     const websocket = WebSocketService.getInstance();
-    websocket.register(websocket.LOGIN_ACTION, requestCallback);
-    websocket.register(websocket.SIGN_UP_ACTION, requestCallback);
+    websocket.register(api.common.ProtocolNumber.LOGIN, requestCallback);
+    websocket.register(api.common.ProtocolNumber.SIGN_UP, requestCallback);
     setWs(websocket);
   }, [requestCallback]);
 

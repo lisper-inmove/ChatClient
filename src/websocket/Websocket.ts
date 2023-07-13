@@ -4,14 +4,8 @@ import { api } from '../proto/api/api';
 
 class WebSocketService {
 
-  public POPUP_ERROR = 0xFFFF;
-  public LOGIN_ACTION = 0x01;
-  public SIGN_UP_ACTION = 0x02;
-  public CREATE_MESSAGE_ACTION = 0x13;
-  public CREATE_CHITCHAT = 0x10;
-
-  // private SOCKET_URL = 'wss://chat.inmove.top/ws';
-  private SOCKET_URL = 'ws://192.168.3.124:8765';
+  private SOCKET_URL = 'wss://ai.inmove.top/ChatServer';
+  // private SOCKET_URL = 'ws://192.168.3.124:8765';
 
   private static instance: WebSocketService;
   private socket: ReconnectingWebSocket;
@@ -22,7 +16,8 @@ class WebSocketService {
     this.socket = new ReconnectingWebSocket(this.SOCKET_URL);
 
     this.socket.addEventListener('open', () => {
-      console.log("Connect to server");
+      console.log("Connect to server", this.SOCKET_URL);
+      console.log(api.common.ProtocolNumber.PING);
     });
 
     // 接收到服务端的消息时
@@ -33,13 +28,13 @@ class WebSocketService {
         const message = new Uint8Array(reader.result as ArrayBuffer);
         const protocol = api.common.Protocol.decode(message);
         console.log(protocol, this);
-        if (protocol.action !== this.POPUP_ERROR) {
+        if (protocol.action !== api.common.ProtocolNumber.POPUP_ERROR) {
           const message: Message = JSON.parse(protocol.content);
           const handler = this.handlers.get(protocol.action);
           if (handler) {
             handler(message);
           }
-        } else if (protocol.action === this.POPUP_ERROR) {
+        } else if (protocol.action === api.common.ProtocolNumber.POPUP_ERROR) {
           alert(protocol.errmsg);
         }
       };
@@ -82,19 +77,19 @@ class WebSocketService {
   }
 
   public login(req: any) {
-    this.send(req, this.LOGIN_ACTION);
+    this.send(req, api.common.ProtocolNumber.LOGIN);
   }
 
   public signUp(req: any) {
-    this.send(req, this.SIGN_UP_ACTION);
+    this.send(req, api.common.ProtocolNumber.SIGN_UP);
   }
 
   public createMessage(req: any) {
-    this.send(req, this.CREATE_MESSAGE_ACTION);
+    this.send(req, api.common.ProtocolNumber.CREATE_MESSAGE);
   }
 
   public createChitchat(req: any) {
-    this.send(req, this.CREATE_CHITCHAT);
+    this.send(req, api.common.ProtocolNumber.CREATE_CHITCHAT);
   }
 
 }

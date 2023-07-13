@@ -30,7 +30,7 @@ const CreateRoleDialog: React.FC<{
 
   useEffect(() => {
     const websocket = WebSocketService.getInstance();
-    websocket.register(websocket.CREATE_CHITCHAT, createChitchatCallback);
+    websocket.register(api.common.ProtocolNumber.CREATE_CHITCHAT, createChitchatCallback);
     setWs(websocket);
   }, [createChitchatCallback]);
 

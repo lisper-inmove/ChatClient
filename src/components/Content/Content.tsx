@@ -37,7 +37,7 @@ const Content: React.FC = () => {
 
   useEffect(() => {
     const websocket = WebSocketService.getInstance();
-    websocket.register(websocket.CREATE_MESSAGE_ACTION, messageHandler);
+    websocket.register(api.common.ProtocolNumber.CREATE_MESSAGE, messageHandler);
     setWs(websocket);
   }, []);
 
@@ -98,7 +98,7 @@ const Content: React.FC = () => {
       // 调用onSend函数
       onSend();
     } else if (event.key === 'Enter') {
-   
+
     }
   };
 
@@ -121,7 +121,7 @@ const Content: React.FC = () => {
 
   return (
     <Box className={ styles.content }>
-      <Box 
+      <Box
         className={ styles.messageHistory }
         onScroll={handleScroll}
       >
@@ -138,15 +138,15 @@ const Content: React.FC = () => {
       </Box>
       <Box className={ styles.textArea }>
         <IconButton>
-        {messages.length > 0 && (sending 
-          ? <> 
+        {messages.length > 0 && (sending
+          ? <>
               <Box className={styles.textAreaCtrl}>
-                <StopOutlinedIcon /> 
+                <StopOutlinedIcon />
                 <Typography variant="body1">
                   停止生成
                 </Typography>
               </Box>
-            </> 
+            </>
           : <>
               <Box className={styles.textAreaCtrl}>
                 <RefreshIcon />
@@ -169,7 +169,7 @@ const Content: React.FC = () => {
           InputProps={{
             endAdornment: (
               <IconButton color="primary" aria-label="send message" onClick={onSend}>
-                {sending ? <SendIcon className={styles.sendingIcon} /> 
+                {sending ? <SendIcon className={styles.sendingIcon} />
                   : <SendIcon className={styles.sendIcon} />}
               </IconButton>
             ),
