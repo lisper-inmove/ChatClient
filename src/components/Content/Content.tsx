@@ -13,12 +13,12 @@ import WebSocketService from '../../websocket/Websocket';
 import { Request, Response } from '../../websocket/Protocol';
 import styles from '../../css/Content.module.css';
 import { api } from '../../proto/api/api';
+import { useCurrentChitchat } from '../../contexts/CurrentChitchatContext';
 
 interface ChatMessage {
   content: string,
   role: string,
 }
-
 
 const Content: React.FC = () => {
   const textFieldMaxRows = 10;
@@ -34,6 +34,7 @@ const Content: React.FC = () => {
   const [userScrolledUp, setUserScrolledUp] = useState(false);
   const [lastScrollTop, setLastScrollTop] = useState(0);
   const bottomRef = useRef<HTMLDivElement>(null);
+  const [currentChitchat, setCurrentChitchat] = useCurrentChitchat();
 
   useEffect(() => {
     const websocket = WebSocketService.getInstance();
@@ -46,6 +47,10 @@ const Content: React.FC = () => {
       bottomRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   }, [messages, userScrolledUp]);
+
+  useEffect(() => {
+    console.log(currentChitchat);
+  }, [currentChitchat]);
 
   const messageHandler = (resp: api.chitchat.CreateMessageResponse) => {
     setMessages((prevMessages) => {

@@ -9,6 +9,9 @@ import { WebsiteTheme, ColorConstants } from '../themes/WebsiteTheme';
 import { SidebarTheme } from '../themes/SidebarTheme';
 import { ContentTheme } from '../themes/ContentTheme';
 import { styled } from '@mui/system';
+import { SharedVariableProvider } from '../contexts/global';
+import { CurrentChitchatProvider } from '../contexts/CurrentChitchatContext';
+import { UserinfoProvider } from '../contexts/UserinfoContext';
 
 const Home: React.FC = () => {
 
@@ -30,28 +33,34 @@ const Home: React.FC = () => {
   }));
 
   return (
-    <ThemeProvider theme={WebsiteTheme}>
-      <Box className='Container'>
+    <UserinfoProvider>
+    <CurrentChitchatProvider>
 
-        <StyledMain>
+      <ThemeProvider theme={WebsiteTheme}>
+        <Box className='Container'>
 
-          <ThemeProvider theme={SidebarTheme}>
-            <StyledSidebar>
-              <Sidebar />
-            </StyledSidebar>
-          </ThemeProvider>
+          <StyledMain>
 
-          <ThemeProvider theme={ContentTheme}>
+            <ThemeProvider theme={SidebarTheme}>
+              <StyledSidebar>
+                <Sidebar />
+              </StyledSidebar>
+            </ThemeProvider>
 
-            <StyledContent>
-              <Content />
-            </StyledContent>
-          </ThemeProvider>
+            <ThemeProvider theme={ContentTheme}>
 
-        </StyledMain>
+              <StyledContent>
+                <Content />
+              </StyledContent>
+            </ThemeProvider>
 
-      </Box>
-    </ThemeProvider>
+          </StyledMain>
+
+        </Box>
+      </ThemeProvider>
+
+    </CurrentChitchatProvider>
+    </UserinfoProvider>
   );
 }
 

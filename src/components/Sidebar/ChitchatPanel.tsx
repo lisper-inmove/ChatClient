@@ -18,6 +18,7 @@ import WebSocketService from '../../websocket/Websocket';
 import { styled } from '@mui/system';
 import { api } from '../../proto/api/api';
 import { entity } from '../../proto/entities/entities';
+import { useCurrentChitchat } from '../../contexts/CurrentChitchatContext';
 
 
 // styles ------------------------------------------------------------
@@ -81,15 +82,11 @@ const ItemOperations = styled('p')(({ theme }) => ({
 
 // styles end---------------------------------------------------------
 
-enum ChitchatType {
-  ROLE = 'ROLE',
-  CHAT = 'CHAT',
-}
-
 interface Chitchat {
   id: string;
   name: string;
-  type: ChitchatType;
+  type: string;
+  description: string;
 }
 
 const ChitchatPanel = () => {
@@ -99,12 +96,14 @@ const ChitchatPanel = () => {
   const [editedChitchatName, setEditedChitchatName] = React.useState('');
   const [createRoleDialogOpen, setCreateRoleDialogOpen] = useState(false);
   const [ws, setWs] = useState<WebSocketService | null>(null);
+  const [currentChitchat, setCurrentChitchat] = useCurrentChitchat();
 
   const chitchatListCallback = useCallback((message: any) => {
     const newChitchat: Chitchat = {
       id: message.id,
       name: message.name,
       type: message.type,
+      description: message.description,
     };
     setChitchatList((prevChitchatList) => [newChitchat, ...prevChitchatList]);
   }, []);
@@ -120,8 +119,8 @@ const ChitchatPanel = () => {
     setWs(websocket);
   }, [chitchatListCallback]);
 
-  const handleCreateButtonClick = (type: ChitchatType) => {
-    if (type == ChitchatType.CHAT) {
+  const handleCreateButtonClick = (type: string) => {
+    if (type == "CHAT") {
       if (ws) {
         ws.createChitchat({
           name: "New Chat",
@@ -139,13 +138,18 @@ const ChitchatPanel = () => {
       id: chitchat.id,
       name: chitchat.name,
       type: chitchat.type,
+      description: chitchat.description,
     };
     setChitchatList((prevChitchatList) => [newChitchat, ...prevChitchatList]);
   }
 
   const createRole = (message: any) => {
-    console.log(">>>>>>>>>>", message);
     chitchatListCallback(message);
+    setCurrentChitchat({
+      id: message.id,
+      name: message.name,
+      description: message.description,
+    });
   }
 
   const handleShareChitchat = (id: string) => {}
@@ -181,7 +185,7 @@ const ChitchatPanel = () => {
           <CreateChitchatBorder>
             <Button
               variant="contained"
-              onClick={() => handleCreateButtonClick(ChitchatType.ROLE)}
+              onClick={() => handleCreateButtonClick("ROLE")}
             >
               新建角色
             </Button>
@@ -192,7 +196,7 @@ const ChitchatPanel = () => {
             />
             <Button
               variant="contained"
-              onClick={() => handleCreateButtonClick(ChitchatType.CHAT)}
+              onClick={() => handleCreateButtonClick("CHAT")}
             >
               新建聊天
             </Button>
@@ -209,7 +213,7 @@ const ChitchatPanel = () => {
               onMouseLeave={() => setHoveredItemId('')}
             >
               <ChitchatItem>
-                {chitchat.type === ChitchatType.ROLE ? <RoleIcon /> : <ChatIcon />}
+                {chitchat.type === "ROLE" ? <RoleIcon /> : <ChatIcon />}
                   {editItemId === chitchat.id ? (
                   <TextField
                     value={editedChitchatName}
