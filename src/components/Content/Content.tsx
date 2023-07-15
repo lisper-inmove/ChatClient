@@ -88,7 +88,8 @@ const Content: React.FC = () => {
 
     ws.createMessage({
       role: 'user',
-      content: message
+      content: message,
+      chitchatId: currentChitchat.id,
     });
 
     setSending(true);
