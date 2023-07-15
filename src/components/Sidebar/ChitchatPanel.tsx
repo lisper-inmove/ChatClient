@@ -109,9 +109,14 @@ const ChitchatPanel = () => {
     setChitchatList((prevChitchatList) => [newChitchat, ...prevChitchatList]);
   }, []);
 
+  const deleteChitchatCallback = useCallback((message: any) => {
+    setChitchatList((prevChitchatList) => prevChitchatList.filter(item => item.id !== message.id));
+  });
+
   useEffect(() => {
     const websocket = WebSocketService.getInstance();
     websocket.register(api.common.ProtocolNumber.LIST_CHITCHAT, chitchatListCallback);
+    websocket.register(api.common.ProtocolNumber.DELETE_CHITCHAT, deleteChitchatCallback);
     setWs(websocket);
   }, [chitchatListCallback]);
 
@@ -144,7 +149,14 @@ const ChitchatPanel = () => {
   }
 
   const handleShareChitchat = (id: string) => {}
-  const handleDeleteChitchat = (id: string) => {}
+  const handleDeleteChitchat = (id: string) => {
+    if (!ws) {
+      return;
+    }
+    ws.deleteChitchat({
+      id: id
+    });
+  }
 
   const handleStartEditing = (id: string, name: string) => {
     setEditItemId(id);
