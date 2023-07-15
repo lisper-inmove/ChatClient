@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
@@ -14,7 +14,10 @@ import { ThemeProvider } from '@mui/material/styles';
 import { ChitchatListTheme, CreateContainerTheme } from '../../themes/ChitchatTheme';
 import { ColorConstants } from '../../themes/WebsiteTheme';
 import CreateRoleDialog from './CreateRoleDialog';
+import WebSocketService from '../../websocket/Websocket';
 import { styled } from '@mui/system';
+import { api } from '../../proto/api/api';
+import { entity } from '../../proto/entities/entities';
 
 
 // styles ------------------------------------------------------------
@@ -79,31 +82,48 @@ const ItemOperations = styled('p')(({ theme }) => ({
 // styles end---------------------------------------------------------
 
 enum ChitchatType {
-  ROLE = 'Role',
-  CHAT = 'Chat',
+  ROLE = 'ROLE',
+  CHAT = 'CHAT',
 }
 
 interface Chitchat {
-  id: number;
+  id: string;
   name: string;
   type: ChitchatType;
 }
 
 const ChitchatPanel = () => {
   const [chitchatList, setChitchatList] = useState<Chitchat[]>([]);
-  const [hoveredItemId, setHoveredItemId] = React.useState(-1);
-  const [editItemId, setEditItemId] = React.useState(-1);
+  const [hoveredItemId, setHoveredItemId] = React.useState('');
+  const [editItemId, setEditItemId] = React.useState('');
   const [editedChitchatName, setEditedChitchatName] = React.useState('');
   const [createRoleDialogOpen, setCreateRoleDialogOpen] = useState(false);
+  const [ws, setWs] = useState<WebSocketService | null>(null);
 
-  // TODO: for test. 应该由服务端生成ID
-  const generateId = () => {
-    return chitchatList.length > 0 ? Math.max(...chitchatList.map(c => c.id)) + 1 : 1;
-  };
+  const chitchatListCallback = useCallback((message: any) => {
+    const newChitchat: Chitchat = {
+      id: message.id,
+      name: message.name,
+      type: message.type,
+    };
+    setChitchatList((prevChitchatList) => [newChitchat, ...prevChitchatList]);
+  }, []);
+
+  useEffect(() => {
+    const websocket = WebSocketService.getInstance();
+    websocket.register(api.common.ProtocolNumber.LIST_CHITCHAT, chitchatListCallback);
+    setWs(websocket);
+  }, [chitchatListCallback]);
 
   const handleCreateButtonClick = (type: ChitchatType) => {
     if (type == ChitchatType.CHAT) {
-
+      if (ws) {
+        ws.createChitchat({
+          name: "New Chat",
+          description: '',
+          type: 'CHAT'
+        });
+      }
     } else {
       setCreateRoleDialogOpen(true);
     }
@@ -118,26 +138,26 @@ const ChitchatPanel = () => {
     setChitchatList((prevChitchatList) => [newChitchat, ...prevChitchatList]);
   }
 
-  const createRole = (name: string, description: string) => {
-
+  const createRole = (message: any) => {
+    console.log(">>>>>>>>>>", message);
+    chitchatListCallback(message);
   }
 
-  const handleShareChitchat = (id: number) => {}
-  const handleDeleteChitchat = (id: number) => {}
+  const handleShareChitchat = (id: string) => {}
+  const handleDeleteChitchat = (id: string) => {}
 
-  const handleStartEditing = (id: number, name: string) => {
+  const handleStartEditing = (id: string, name: string) => {
     setEditItemId(id);
     setEditedChitchatName(name);
-    console.log(id, name);
   };
 
   const handleCancelEditing = () => {
-    setEditItemId(-1);
+    setEditItemId('');
     setEditedChitchatName('');
   };
 
   const handleApplyChanges = (chitchat: Chitchat) => {
-    setEditItemId(-1);
+    setEditItemId('');
     setEditedChitchatName('');
     chitchat.name = editedChitchatName;
   };
@@ -155,7 +175,7 @@ const ChitchatPanel = () => {
             </Button>
             <CreateRoleDialog
               onClose={() => setCreateRoleDialogOpen(false)}
-              onConfirm={(name: string, description: string) => createRole(name, description)}
+              onConfirm={(message: any) => createRole(message)}
               open={createRoleDialogOpen}
             />
             <Button
@@ -174,7 +194,7 @@ const ChitchatPanel = () => {
             <ChitchatListItem
               key={chitchat.id}
               onMouseEnter={() => setHoveredItemId(chitchat.id)}
-              onMouseLeave={() => setHoveredItemId(-1)}
+              onMouseLeave={() => setHoveredItemId('')}
             >
               <ChitchatItem>
                 {chitchat.type === ChitchatType.ROLE ? <RoleIcon /> : <ChatIcon />}

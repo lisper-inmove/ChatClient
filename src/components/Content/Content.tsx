@@ -65,7 +65,6 @@ const Content: React.FC = () => {
         setSending(false);
         setReceiving(false);
       }
-      console.log(newMessages);
       return newMessages;
     })
   }

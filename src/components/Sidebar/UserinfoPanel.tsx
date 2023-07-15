@@ -60,7 +60,7 @@ const UserinfoPanel = () => {
     if (userinfo === null) {
       setLoginDialogOpen(true);
     } else {
-      if (ws) {
+      if (ws && userinfo.token) {
         ws.tokenAuthorize({"token": userinfo.token});
       }
     }

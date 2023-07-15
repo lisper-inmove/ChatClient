@@ -14,7 +14,7 @@ import { api } from '../../proto/api/api';
 const CreateRoleDialog: React.FC<{
   open: boolean,
   onClose: () => void,
-  onConfirm: (name: string, description: string) => void,
+  onConfirm: (message: any) => void,
 }> = ({ open, onClose, onConfirm }) => {
   const DESCRIPTION_MAX_LENGTH = 300;
   const [remainingChars, setRemainingChars] = useState(DESCRIPTION_MAX_LENGTH);
@@ -25,8 +25,9 @@ const CreateRoleDialog: React.FC<{
   const [ws, setWs] = useState<WebSocketService | null>(null);
 
   const createChitchatCallback = useCallback((message: any) => {
-
-  }, []);
+    onConfirm(message);
+    onClose();
+  }, [onClose, onConfirm]);
 
   useEffect(() => {
     const websocket = WebSocketService.getInstance();
@@ -51,7 +52,6 @@ const CreateRoleDialog: React.FC<{
       description: roleDescription,
       type: 'ROLE'
     });
-    onConfirm(roleName, roleDescription);
   }
 
   const onCreateRoleCancel = () => {
@@ -63,7 +63,6 @@ const CreateRoleDialog: React.FC<{
   }
 
   const onDescriptionChange = (event: any) => {
-    console.log(event);
     setRemainingChars(DESCRIPTION_MAX_LENGTH - event.target.value.length);
     setRoleDescription(event.target.value);
     setRoleDescriptionError('');

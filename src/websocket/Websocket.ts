@@ -4,8 +4,8 @@ import { api } from '../proto/api/api';
 
 class WebSocketService {
 
-  private SOCKET_URL = 'wss://ai.inmove.top/ChatServer';
-  // private SOCKET_URL = 'ws://192.168.3.124:8765';
+  // private SOCKET_URL = 'wss://ai.inmove.top/ChatServer';
+  private SOCKET_URL = 'ws://192.168.3.124:8765';
 
   private static instance: WebSocketService;
   private socket: ReconnectingWebSocket;
@@ -16,8 +16,7 @@ class WebSocketService {
     this.socket = new ReconnectingWebSocket(this.SOCKET_URL);
 
     this.socket.addEventListener('open', () => {
-      console.log("Connect to server", this.SOCKET_URL);
-      console.log(api.common.ProtocolNumber.PING);
+
     });
 
     // 接收到服务端的消息时
@@ -27,7 +26,6 @@ class WebSocketService {
       reader.onload = () => {
         const message = new Uint8Array(reader.result as ArrayBuffer);
         const protocol = api.common.Protocol.decode(message);
-        console.log(protocol, this);
         if (protocol.action !== api.common.ProtocolNumber.POPUP_ERROR) {
           const message: Message = JSON.parse(protocol.content);
           const handler = this.handlers.get(protocol.action);
@@ -42,7 +40,7 @@ class WebSocketService {
     });
 
     this.socket.addEventListener('close', (event: any) => {
-      console.log("close", event);
+
     });
 
   }
