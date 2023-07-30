@@ -63,6 +63,18 @@ const UserinfoPanel = () => {
     }
   };
 
+  const handleLoginDialogClose = () => {
+    if (userinfo !== null) {
+      setLoginDialogOpen(false);
+    }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('userinfo');
+    setUserinfo(null);
+    setAnchorEl(null);
+  }
+
   useEffect(() => {
     if (userinfo === null) {
       setLoginDialogOpen(true);
@@ -83,26 +95,6 @@ const UserinfoPanel = () => {
     setWs(websocket);
   }, [ws]);
 
-  const handleLoginDialogClose = () => {
-    if (userinfo !== null) {
-      setLoginDialogOpen(false);
-    }
-  };
-
-  // 登陆/注册完成之后调用的函数
-  const setUserinfoFromDialog = (username: string, avatar: string) => {
-    setUserinfo({
-      "username": username,
-      "avatar": avatar
-    });
-  };
-
-  const handleLogout = () => {
-    localStorage.removeItem('userinfo');
-    setUserinfo(null);
-    setAnchorEl(null);
-  }
-
   return (
     <Box className={styles.userinfoContainer}>
       <Box className={styles.userinfoBorder}>
@@ -121,7 +113,11 @@ const UserinfoPanel = () => {
               </Typography>
             </>
           ) : (
-            <LoginDialog open={loginDialogOpen} onClose={handleLoginDialogClose} setUserinfo={setUserinfoFromDialog} />
+            <LoginDialog
+              open={loginDialogOpen}
+              onClose={handleLoginDialogClose}
+              setUserinfo={setUserinfo}
+            />
           ))}
         </Box>
 

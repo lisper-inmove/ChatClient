@@ -17,7 +17,7 @@ import { Md5 } from 'ts-md5';
 interface LoginDialogProps {
   open: boolean;
   onClose: () => void;
-  setUserinfo: (username: string, avatar: string) => void;
+  setUserinfo: (userinfo: any) => void;
 }
 
 const LoginDialog: React.FC<LoginDialogProps> = ({ open, onClose, setUserinfo }) => {
@@ -35,18 +35,24 @@ const LoginDialog: React.FC<LoginDialogProps> = ({ open, onClose, setUserinfo })
   const [signUpConfirmPasswordError, setSignUpConfirmPasswordError] = useState("");
   const [ws, setWs] = useState<WebSocketService | null>(null);
 
-  const requestCallback = useCallback((message: any) => {
-    localStorage.setItem('userinfo', JSON.stringify(message));
-    setUserinfo(message.username, '');
-    onClose();
-  }, [onClose, setUserinfo]);
-
   useEffect(() => {
+
+    const requestCallback = (message: any) => {
+      localStorage.setItem('userinfo', JSON.stringify(message));
+      console.log(message);
+      console.log(setUserinfo);
+      setUserinfo({
+        "username": message.username, 
+        "token": message.token,
+      });
+      onClose();
+    };
+
     const websocket = WebSocketService.getInstance();
     websocket.register(api.common.Action.LOGIN, requestCallback);
     websocket.register(api.common.Action.SIGN_UP, requestCallback);
     setWs(websocket);
-  }, [requestCallback]);
+  }, [onClose, setUserinfo]);
 
   const checkSignUpParams = () => {
     if (signUpUsername.length < 3) {
