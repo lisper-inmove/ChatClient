@@ -108,7 +108,7 @@ const UserinfoPanel = () => {
                   :
                 userinfo.username.charAt(0)}
               </Avatar>
-              <Typography variant="h6" className={styles.userinfoUsername}>
+              <Typography variant="h6" style={{ marginLeft: '10px' }}>
                 {userinfo.username}
               </Typography>
             </>

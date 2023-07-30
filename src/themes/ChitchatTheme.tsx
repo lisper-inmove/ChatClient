@@ -98,6 +98,7 @@ export const CreateContainerTheme = createTheme({
           },
           height: '30px',
           color: ColorConstants.buttonTextColor,
+          backgroundColor: ColorConstants.sidebarBgColor,
         }
       }
     }

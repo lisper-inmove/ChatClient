@@ -39,8 +39,6 @@ const LoginDialog: React.FC<LoginDialogProps> = ({ open, onClose, setUserinfo })
 
     const requestCallback = (message: any) => {
       localStorage.setItem('userinfo', JSON.stringify(message));
-      console.log(message);
-      console.log(setUserinfo);
       setUserinfo({
         "username": message.username, 
         "token": message.token,

@@ -3,8 +3,8 @@ import { api } from '../proto/api/api';
 
 class WebSocketService {
 
-  // private SOCKET_URL = 'wss://ai.inmove.top/ChatServer';
-  private SOCKET_URL = 'ws://192.168.3.124:8765';
+  private SOCKET_URL = 'wss://ai.inmove.top/ChatServer';
+  // private SOCKET_URL = 'ws://192.168.3.124:8765';
 
   private static instance: WebSocketService;
   private socket: ReconnectingWebSocket;
