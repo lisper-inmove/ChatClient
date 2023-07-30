@@ -1,27 +1,36 @@
 import React, { createContext, useContext, useState } from 'react';
 
+// 1. 定义数据类型
 type Userinfo = {
   username: string;
   token: string;
 }
 
-// Create a context
-export const UserinfoContext = createContext<[Userinfo, React.Dispatch<React.SetStateAction<Userinfo>>]>({});
+// 2. 定义Context
+export const UserinfoContext = createContext<[Userinfo, React.Dispatch<React.SetStateAction<Userinfo>>]>([
+  {
+    username: '',
+    token: ''
+  }, 
+  () => {}  // a fake set function
+]);
 
-// Create a provider component
-export const UserinfoProvider: React.FC = ({ children }) => {
-  const state = useState<Userinfo>({
+// 3. 定义Provider
+export const UserinfoProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
+
+  const userinfo = useState<Userinfo>({
     username: '',
     token: '',
   });
-  return <UserinfoContext.Provider value={state}>{children}</UserinfoContext.Provider>;
+
+  return <UserinfoContext.Provider value={userinfo}>{children}</UserinfoContext.Provider>;
 };
 
-// Create a hook to use the context
+// 4
 export const useUserinfo = () => {
   const context = useContext(UserinfoContext);
   if (context === undefined) {
-    throw new Error('useSharedVariable must be used within a SharedVariableProvider');
+    throw new Error('useUserinfo must be used within a UserinfoProvider');
   }
   return context;
 };

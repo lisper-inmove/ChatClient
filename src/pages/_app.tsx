@@ -9,7 +9,7 @@ import { WebsiteTheme, ColorConstants } from '../themes/WebsiteTheme';
 import { SidebarTheme } from '../themes/SidebarTheme';
 import { ContentTheme } from '../themes/ContentTheme';
 import { styled } from '@mui/system';
-import { SharedVariableProvider } from '../contexts/global';
+import { ContextCompose } from '../contexts/ContextCompose';
 import { CurrentChitchatProvider } from '../contexts/CurrentChitchatContext';
 import { UserinfoProvider } from '../contexts/UserinfoContext';
 
@@ -33,8 +33,7 @@ const Home: React.FC = () => {
   }));
 
   return (
-    <UserinfoProvider>
-    <CurrentChitchatProvider>
+    <ContextCompose>
 
       <ThemeProvider theme={WebsiteTheme}>
         <Box className='Container'>
@@ -59,8 +58,7 @@ const Home: React.FC = () => {
         </Box>
       </ThemeProvider>
 
-    </CurrentChitchatProvider>
-    </UserinfoProvider>
+    </ContextCompose>
   );
 }
 

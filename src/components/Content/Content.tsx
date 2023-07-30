@@ -10,7 +10,6 @@ import { Send as SendIcon } from '@mui/icons-material';
 import { styled } from '@mui/system';
 import MessageItem from './MessageItem';
 import WebSocketService from '../../websocket/Websocket';
-import { Request, Response } from '../../websocket/Protocol';
 import styles from '../../css/Content.module.css';
 import { api } from '../../proto/api/api';
 import { useCurrentChitchat } from '../../contexts/CurrentChitchatContext';
@@ -38,7 +37,7 @@ const Content: React.FC = () => {
 
   useEffect(() => {
     const websocket = WebSocketService.getInstance();
-    websocket.register(api.common.ProtocolNumber.CREATE_MESSAGE, messageHandler);
+    websocket.register(api.common.Action.CREATE_MESSAGE, messageHandler);
     setWs(websocket);
   }, []);
 
@@ -87,7 +86,7 @@ const Content: React.FC = () => {
     }]);
 
     ws.createMessage({
-      role: 'user',
+      role: 'USER',
       content: message,
       chitchatId: currentChitchat.id,
     });
@@ -124,6 +123,17 @@ const Content: React.FC = () => {
     setLastScrollTop(scrollTop);
   };
 
+  const handleGenerateButtonClick = () => {
+    if (!ws) {
+      return;
+    }
+    if (sending) {
+      ws.stopGenerate({});
+    } else {
+      ws.regenerate({});
+    }
+  }
+
   return (
     <Box className={ styles.content }>
       <Box
@@ -142,7 +152,7 @@ const Content: React.FC = () => {
         </Box>
       </Box>
       <Box className={ styles.textArea }>
-        <IconButton>
+        <IconButton onClick={handleGenerateButtonClick}>
         {messages.length > 0 && (sending
           ? <>
               <Box className={styles.textAreaCtrl}>

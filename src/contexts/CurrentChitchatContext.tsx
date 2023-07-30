@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 type Chitchat = {
   id: string;
@@ -8,10 +8,20 @@ type Chitchat = {
 }
 
 // Create a context
-export const CurrentChitchatContext = createContext<[Chitchat, React.Dispatch<React.SetStateAction<Chitchat>>]>({});
+export const CurrentChitchatContext = createContext<[Chitchat, React.Dispatch<React.SetStateAction<Chitchat>>]>([{
+  id: '',
+  name: '',
+  description: '',
+  type: '',
+}, () => {},
+]);
+
+type CurrentChitchatProviderProps = {
+  children: ReactNode;
+}
 
 // Create a provider component
-export const CurrentChitchatProvider: React.FC = ({ children }) => {
+export const CurrentChitchatProvider: React.FC<CurrentChitchatProviderProps> = ({ children }) => {
   const state = useState<Chitchat>({
     id: '', 
     name: '',

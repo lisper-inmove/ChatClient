@@ -110,14 +110,14 @@ const ChitchatPanel = () => {
 
   const deleteChitchatCallback = useCallback((message: any) => {
     setChitchatList((prevChitchatList) => prevChitchatList.filter(item => item.id !== message.id));
-  });
+  }, []);
 
   useEffect(() => {
     const websocket = WebSocketService.getInstance();
-    websocket.register(api.common.ProtocolNumber.LIST_CHITCHAT, chitchatListCallback);
-    websocket.register(api.common.ProtocolNumber.DELETE_CHITCHAT, deleteChitchatCallback);
+    websocket.register(api.common.Action.LIST_CHITCHAT, chitchatListCallback);
+    websocket.register(api.common.Action.DELETE_CHITCHAT, deleteChitchatCallback);
     setWs(websocket);
-  }, [chitchatListCallback]);
+  }, [chitchatListCallback, deleteChitchatCallback]);
 
   const handleCreateButtonClick = (type: string) => {
     if (type == "CHAT") {
@@ -149,6 +149,7 @@ const ChitchatPanel = () => {
       id: message.id,
       name: message.name,
       description: message.description,
+      type: message.type,
     });
   }
 
@@ -177,6 +178,15 @@ const ChitchatPanel = () => {
     setEditedChitchatName('');
     chitchat.name = editedChitchatName;
   };
+
+  const loadMessages = (chitchat: Chitchat) => {
+    setCurrentChitchat({
+      id: chitchat.id,
+      name: chitchat.name,
+      description: chitchat.description,
+      type: chitchat.type
+    });
+  }
 
   return (
     <ChitchatContainer>
@@ -212,7 +222,9 @@ const ChitchatPanel = () => {
               onMouseEnter={() => setHoveredItemId(chitchat.id)}
               onMouseLeave={() => setHoveredItemId('')}
             >
-              <ChitchatItem>
+              <ChitchatItem
+                onClick={() => loadMessages(chitchat)}
+              >
                 {chitchat.type === "ROLE" ? <RoleIcon /> : <ChatIcon />}
                   {editItemId === chitchat.id ? (
                   <TextField

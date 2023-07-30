@@ -56,6 +56,13 @@ const UserinfoPanel = () => {
     return null;
   });
 
+  const tokenAuthorizeCallback = (message: any) => {
+    if (Object.keys(message).length === 0) {
+      setLoginDialogOpen(true);
+      setUserinfo(null);
+    }
+  };
+
   useEffect(() => {
     if (userinfo === null) {
       setLoginDialogOpen(true);
@@ -72,7 +79,7 @@ const UserinfoPanel = () => {
 
   useEffect(() => {
     const websocket = WebSocketService.getInstance();
-    websocket.register(api.common.ProtocolNumber.TOKEN_AUTHORIZE, (message: any) => {});
+    websocket.register(api.common.Action.TOKEN_AUTHORIZE, tokenAuthorizeCallback);
     setWs(websocket);
   }, [ws]);
 

@@ -43,8 +43,8 @@ const LoginDialog: React.FC<LoginDialogProps> = ({ open, onClose, setUserinfo })
 
   useEffect(() => {
     const websocket = WebSocketService.getInstance();
-    websocket.register(api.common.ProtocolNumber.LOGIN, requestCallback);
-    websocket.register(api.common.ProtocolNumber.SIGN_UP, requestCallback);
+    websocket.register(api.common.Action.LOGIN, requestCallback);
+    websocket.register(api.common.Action.SIGN_UP, requestCallback);
     setWs(websocket);
   }, [requestCallback]);
 
